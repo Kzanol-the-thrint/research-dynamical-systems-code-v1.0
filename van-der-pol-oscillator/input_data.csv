@@ -1,0 +1,9 @@
+parameter,value
+x0,1.0
+x1,1.0
+x2,1.0
+param_1,0.002
+param_2,1.0
+normalization_factor,0.03
+dt,0.01
+horizon,30.0

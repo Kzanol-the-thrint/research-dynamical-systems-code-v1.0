@@ -1,0 +1,5 @@
+parameter,value
+r_init,1.5e11
+phi_init,0.0
+r_dot_init,0.0
+phi_dot_init,1.99e-7

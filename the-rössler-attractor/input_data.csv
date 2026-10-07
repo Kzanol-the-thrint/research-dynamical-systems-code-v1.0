@@ -1,0 +1,10 @@
+parameter,value
+x0,0.1
+x1,0.0
+x2,0.0
+x3,1.0
+param_a,0.2
+param_b,0.2
+param_c,5.7
+dt,0.01
+horizon,200.0

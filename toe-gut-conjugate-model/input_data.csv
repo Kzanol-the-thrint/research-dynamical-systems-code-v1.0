@@ -1,0 +1,5 @@
+parameter,value
+psi_gr_init,1.0
+p_gr_init,0.05
+psi_qm_real_init,1.0
+psi_qm_imag_init,0.2

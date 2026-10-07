@@ -1,0 +1,68 @@
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+
+def render_plots(trajectory, dt, output_dir="."):
+    """
+    Renders 3D Phase-Space Trajectory and 2D System Evolution plots for the Nonlinear Quantum model as 
+    perfect equal-sized squares fitting the portrait A4 layout.
+    """
+    steps = len(trajectory)
+    time_steps = np.arange(steps) * dt
+    
+    real_vals = trajectory[:, 0]
+    imag_vals = trajectory[:, 1]
+    
+    checkpoint_count = min(20, steps)
+    checkpoint_indices = np.linspace(0, steps - 1, checkpoint_count, dtype=int)
+
+    # Perfect Square Dimensions: Equal width and height (~5.26 inches = 90% of half A4 height)
+    square_size = (11.6929 * 0.5) * 0.9
+
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 1. 3D Phase-Space Manifold (Square)
+    fig_ps = plt.figure(figsize=(square_size, square_size))
+    ax_ps = fig_ps.add_subplot(111, projection='3d')
+    
+    ax_ps.plot(real_vals, imag_vals, time_steps, color='#16a085', linewidth=1.2, label='Quantum Trajectory')
+    ax_ps.scatter(real_vals[checkpoint_indices], imag_vals[checkpoint_indices], time_steps[checkpoint_indices], 
+                  color='#117a65', s=20, label='Checkpoints', zorder=4)
+    ax_ps.scatter([real_vals[0]], [imag_vals[0]], [time_steps[0]], color='blue', s=40, label='Initial State', zorder=5)
+    ax_ps.scatter([real_vals[-1]], [imag_vals[-1]], [time_steps[-1]], color='black', s=40, label='Final State', zorder=5)
+    
+    ax_ps.set_title("3D Nonlinear Quantum Phase-Space Manifold", fontsize=9, fontweight='bold')
+    ax_ps.set_xlabel(r"Real Part Re($\psi$)", fontsize=8, labelpad=5)
+    ax_ps.set_ylabel(r"Imaginary Part Im($\psi$)", fontsize=8, labelpad=5)
+    ax_ps.set_zlabel("Time Steps", fontsize=8, labelpad=5)
+    ax_ps.tick_params(axis='both', labelsize=7)
+    ax_ps.legend(loc='upper left', fontsize=7)
+    
+    ps_file = os.path.join(output_dir, "phase_space_trajectory.png")
+    plt.tight_layout()
+    plt.savefig(ps_file, dpi=300)
+    plt.close(fig_ps)
+
+    # 2. 2D System Evolution Subplots (Square)
+    fig_2d, (ax1, ax2) = plt.subplots(2, 1, figsize=(square_size, square_size), sharex=True)
+    
+    ax1.plot(time_steps, real_vals, color='#2980b9', linewidth=1.4, label=r'Real Amplitude Re($\psi$)')
+    ax1.set_ylabel("Amplitude (Real)", fontsize=8, fontweight='bold')
+    ax1.set_title("Nonlinear Quantum Wavefunction Dynamics", fontsize=9, fontweight='bold')
+    ax1.grid(True, linestyle='--', alpha=0.6)
+    ax1.tick_params(axis='both', labelsize=7)
+    ax1.legend(loc='upper left', fontsize=7)
+
+    ax2.plot(time_steps, imag_vals, color='#e67e22', linewidth=1.4, label=r'Imaginary Amplitude Im($\psi$)')
+    ax2.set_xlabel("Normalized Time", fontsize=8, fontweight='bold')
+    ax2.set_ylabel("Amplitude (Imag)", fontsize=8, fontweight='bold')
+    ax2.grid(True, linestyle='--', alpha=0.6)
+    ax2.tick_params(axis='both', labelsize=7)
+    ax2.legend(loc='upper left', fontsize=7)
+
+    ts_file = os.path.join(output_dir, "system_evolution.png")
+    plt.tight_layout()
+    plt.savefig(ts_file, dpi=300)
+    plt.close(fig_2d)
+    print(f"Exported standardized QM Nonlinear square plots: {ps_file}, {ts_file}")
